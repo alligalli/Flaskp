@@ -9,7 +9,7 @@
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
-            <link rel="stylesheet" href="{{ url_for('static', filename= 'mystyle.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename= 'css/styles.css') }}">
             <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Ubuntu+Mono&display=swap" rel="stylesheet" type="text/css"> 
         {% endblock %}
 
@@ -32,6 +32,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     {{ render_nav_item('about', 'About') }}
+                    {{ render_nav_item('blog', 'Blog') }}
                 </div>
             </div>
         </nav>
@@ -43,6 +44,8 @@
         {% block scripts %}
             <!-- Optional JavaScript -->
             {{ bootstrap.load_js() }}
+            {{ moment.include_moment() }}
+            {{ moment.locale('en') }}
         {% endblock %}
     </body>
 </html>

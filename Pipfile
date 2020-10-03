@@ -8,6 +8,13 @@ verify_ssl = true
 [packages]
 flask = "*"
 bootstrap-flask = "*"
+flask-sqlalchemy = "*"
+flask-moment = "*"
+flask-wtf = "*"
+flask-login = "*"
+flask-migrate = "*"
+python-dotenv = "*"
+flask-admin = {git = "https://github.com/flask-admin/flask-admin.git"}
 
 [requires]
 python_version = "3.7"
