@@ -9,5 +9,10 @@
     <p>{{ moment(current_time).format('LLL') }}</p>
     <p>{{ moment(current_time).fromNow(refresh=True) }}</p>
     <a href="/admin/">Click me to get to Admin!</a>
+    {% if current_user.is_authenticated %}
+        <p><a href="{{ url_for('logout') }}">Logout</a></p>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Login</a></p>
+    {% endif %}
 </div>
 {% endblock %}
