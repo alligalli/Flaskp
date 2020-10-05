@@ -1,7 +1,12 @@
 {% extends 'admin/master.html' %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', _external=True) }}" ></link>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    <p>Hello world</p>
+    <h1 class="text-center">Hello world</h1>
 </div>
 {% endblock %}
