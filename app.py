@@ -89,7 +89,7 @@ class CustomAdminIndexView(AdminIndexView):
         return redirect(url_for('login'))
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Login')
@@ -114,7 +114,7 @@ def blog():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')

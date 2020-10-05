@@ -36,6 +36,10 @@
                 </div>
             </div>
         </nav>
+        
+        {% from 'bootstrap/utils.html' import render_messages %}
+        {{ render_messages() }}
+
         {% endblock %}
 
         <!-- Your page content -->
