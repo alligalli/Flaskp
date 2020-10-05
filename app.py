@@ -1,15 +1,18 @@
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+from redis import Redis
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.widgets import TextArea
 from wtforms.validators import DataRequired, Length, Email
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib import rediscli
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
@@ -46,6 +49,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.now)
     role_id = db.Column(db.Integer, db.ForeignKey('Roles.id'))
+    author_id = db.relationship('Post', backref='author', lazy='dynamic')
 
     @property
     def password(self):
@@ -77,6 +81,39 @@ class Role(db.Model):
     def __repr__(self):
         return self.name
 
+class Post(db.Model):
+    __tablename__ = 'Posts'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Unicode(64))
+    body = db.Column(db.UnicodeText)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
+
+    def __unicode__(self):
+        return self.title
+
+class CKTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get('class'):
+            kwargs['class'] += ' ckeditor'
+        else:
+            kwargs.setdefault('class', 'ckeditor')
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+class CKTextAreaField(TextAreaField):
+    widget = CKTextAreaWidget()
+
+class PostView(ModelView):
+    form_overrides = {
+        'body': CKTextAreaField
+    }
+
+    create_template = 'create_page.html'
+    edit_template = 'edit_page.html'
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 class CustomModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -97,6 +134,9 @@ class LoginForm(FlaskForm):
 admin = Admin(app, name='Flasky ADM', template_mode='bootstrap4', index_view=CustomAdminIndexView())
 admin.add_view(CustomModelView(User, db.session))
 admin.add_view(CustomModelView(Role, db.session))
+admin.add_view(PostView(Post, db.session))
+admin.add_view(rediscli.RedisCli(Redis()))
+
 
 @app.route('/')
 def index():
@@ -108,7 +148,8 @@ def about():
 
 @app.route('/blog')
 def blog():
-    return render_template('blog.html')
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('blog.html', posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
