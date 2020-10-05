@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% from 'bootstrap/form.html' import render_form %}
 
 {% block title %}<title>Flasky - Login</title>{% endblock %}
 
 {% block content %}
 <div class="container mt-2">
-    <h1 class="text-center">Logged In!</h1>
-    <p><a href="{{ url_for('admin.index') }}">Go to Admin</a></p>
+    <h1 class="text-center">Login</h1>
+    {{ render_form(form) }}
 </div>
 {% endblock %}
