@@ -1,19 +1,22 @@
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from redis import Redis
+# from redis import Redis
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.widgets import TextArea
 from wtforms.validators import DataRequired, Length, Email
+from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+from flask_sslify import SSLify
 from flask_admin import Admin, AdminIndexView
-from flask_admin.contrib import rediscli
+# from flask_admin.contrib import rediscli
 from flask_admin.contrib.sqla import ModelView
+from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,11 +32,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIF
 app.config['FLASK_ADMIN_SWATCH'] = os.getenv("FLASK_ADMIN_SWATCH")
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = os.getenv("FLASK_ADMIN_FLUID_LAYOUT")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'flasky.sqlite')
+app.config['CKEDITOR_ENABLE_CSRF'] = os.getenv('CKEDITOR_ENABLE_CSRF')
+app.config['CKEDITOR_PKG_TYPE'] = os.getenv('CKEDITOR_PKG_TYPE')
+app.config['CKEDITOR_FILE_UPLOADER'] = os.getenv("CKEDITOR_FILE_UPLOADER")
+app.config['UPLOADED_PATH'] = os.path.join(basedir, 'uploads')
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+ckeditor = CKEditor(app)
+csrf = CSRFProtect(app)
+sslify = SSLify(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -92,23 +102,9 @@ class Post(db.Model):
     def __unicode__(self):
         return self.title
 
-class CKTextAreaWidget(TextArea):
-    def __call__(self, field, **kwargs):
-        if kwargs.get('class'):
-            kwargs['class'] += ' ckeditor'
-        else:
-            kwargs.setdefault('class', 'ckeditor')
-        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
-
-class CKTextAreaField(TextAreaField):
-    widget = CKTextAreaWidget()
-
 class PostView(ModelView):
-    form_overrides = {
-        'body': CKTextAreaField
-    }
-
-    create_template = 'create_page.html'
+    form_overrides = dict(body=CKEditorField)
+    create_template = 'edit_page.html'
     edit_template = 'edit_page.html'
 
     def is_accessible(self):
@@ -135,7 +131,7 @@ admin = Admin(app, name='Flasky ADM', template_mode='bootstrap4', index_view=Cus
 admin.add_view(CustomModelView(User, db.session))
 admin.add_view(CustomModelView(Role, db.session))
 admin.add_view(PostView(Post, db.session))
-admin.add_view(rediscli.RedisCli(Redis()))
+# admin.add_view(rediscli.RedisCli(Redis()))
 
 
 @app.route('/')
@@ -171,6 +167,22 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+@app.route('/files/<filename>')
+def uploaded_files(filename):
+    path = app.config['UPLOADED_PATH']
+    return send_from_directory(path, filename)
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    extension = f.filename.split('.')[-1].lower()
+    if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+        return upload_fail(message='Image only!')
+    f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+    url = url_for('uploaded_files', filename=f.filename)
+    return upload_success(url=url)
 
 @app.errorhandler(403)
 def forbidden(e):

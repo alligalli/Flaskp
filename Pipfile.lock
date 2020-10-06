@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f3c06077a2fcc8b1800e63c15d19d60a055956825de36978e4dcad8593b2b0bc"
+            "sha256": "6d308744ad3abe9221318441294019f73a6f0b0eea8f60891d58efbb245d9b13"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -64,6 +64,14 @@
             "git": "https://github.com/flask-admin/flask-admin.git",
             "ref": "58bf83185d3ce16490e3aa9ccd1240d7ae169802"
         },
+        "flask-ckeditor": {
+            "hashes": [
+                "sha256:c8c752bb2aedb78d9dde4e594c6774013e6b6428e23d39e981954d1640fc66e3",
+                "sha256:d29ebd38c3fac5460e48eb70ca6d579188a3090e44d88b1683aa0d510029f08e"
+            ],
+            "index": "pypi",
+            "version": "==0.4.4.1"
+        },
         "flask-login": {
             "hashes": [
                 "sha256:6d33aef15b5bcead780acc339464aae8a6e28f13c90d8b1cf9de8b549d1c0b4b",
@@ -95,6 +103,13 @@
             ],
             "index": "pypi",
             "version": "==2.4.4"
+        },
+        "flask-sslify": {
+            "hashes": [
+                "sha256:d33e1d3c09cd95154176aa8a7319418e52129fc482dd56d8a8ad7c24500d543e"
+            ],
+            "index": "pypi",
+            "version": "==0.1.5"
         },
         "flask-wtf": {
             "hashes": [

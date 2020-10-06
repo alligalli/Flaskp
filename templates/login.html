@@ -6,6 +6,17 @@
 {% block content %}
 <div class="container mt-2">
     <h1 class="text-center">Login</h1>
-    {{ render_form(form) }}
+</div>
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card my-4 rounded-lg border-0">
+                <div class="card-body">
+                    {{ render_form(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

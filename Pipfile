@@ -17,6 +17,8 @@ python-dotenv = "*"
 flask-admin = {git = "https://github.com/flask-admin/flask-admin.git"}
 wtforms = {extras = ["email"],version = "*"}
 redis = "*"
+flask-ckeditor = "*"
+flask-sslify = "*"
 
 [requires]
 python_version = "3.7"
