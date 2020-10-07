@@ -14,10 +14,8 @@
             {% from 'bootstrap/utils.html' import render_icon %}
             <div class="mr-3">{{ render_icon('terminal', size='50px') }}</div>
             <div class="media-body">
-                <h1 class="mt-0 mb-1">{{ post.title }}</h1>
+                <h1 class="mt-0 mb-1"><a href="{{ url_for('blog')}}/{{ post.slug }}">{{ post.title }}</a></h1>
                 {{ post.author.username }} - {{ moment(post.timestamp).fromNow() }}
-                <br>
-                {{ post.body|safe }}
             </div>
         </li>
     </ul>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}<title>{{ post.title }}</title>{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+    <h1 class="text-center">{{ post.title }}</h1>
+    <p class="text-center">{{ post.author.username }} - {{ moment(post.timestamp).fromNow() }}</p>
+    <hr>
+    {{ post.body|safe }}
+</div>
+{% endblock %}

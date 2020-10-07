@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 # from redis import Redis
+from slugify import slugify
 
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_bootstrap import Bootstrap
@@ -72,7 +73,6 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
     def __unicode__(self):
         return self.username
     
@@ -98,6 +98,7 @@ class Post(db.Model):
     body = db.Column(db.UnicodeText)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    slug = db.Column(db.String(80))
 
     def __unicode__(self):
         return self.title
@@ -106,6 +107,10 @@ class PostView(ModelView):
     form_overrides = dict(body=CKEditorField)
     create_template = 'edit_page.html'
     edit_template = 'edit_page.html'
+
+    def on_model_change(self, form, model, is_created):
+        if is_created and not model.slug:
+            model.slug = slugify(model.title)
 
     def is_accessible(self):
         return current_user.is_authenticated
@@ -133,7 +138,6 @@ admin.add_view(CustomModelView(Role, db.session))
 admin.add_view(PostView(Post, db.session))
 # admin.add_view(rediscli.RedisCli(Redis()))
 
-
 @app.route('/')
 def index():
     return render_template('index.html', current_time=datetime.utcnow())
@@ -146,6 +150,12 @@ def about():
 def blog():
     posts = Post.query.order_by(Post.timestamp.desc()).all()
     return render_template('blog.html', posts=posts)
+
+@app.route('/blog/<slug>')
+def post(slug):
+    post = Post.query.filter_by(slug=slug).first()
+    if post:
+        return render_template("post.html", post=post)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -173,7 +183,6 @@ def uploaded_files(filename):
     path = app.config['UPLOADED_PATH']
     return send_from_directory(path, filename)
 
-
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files.get('upload')
@@ -198,7 +207,7 @@ def internal_server_error(e):
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, User=User, Role=Role)
+    return dict(db=db, User=User, Role=Role, Post=Post)
 
 @app.cli.command("test")
 def test():

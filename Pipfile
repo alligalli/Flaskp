@@ -19,6 +19,7 @@ wtforms = {extras = ["email"],version = "*"}
 redis = "*"
 flask-ckeditor = "*"
 flask-sslify = "*"
+python-slugify = "*"
 
 [requires]
 python_version = "3.7"
