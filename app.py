@@ -148,8 +148,10 @@ def about():
 
 @app.route('/blog')
 def blog():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('blog.html', posts=posts)
+    page = request.args.get('page', 1, type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, per_page=3)
+    posts = pagination.items
+    return render_template('blog.html', posts=posts, pagination=pagination)
 
 @app.route('/blog/<slug>')
 def post(slug):
