@@ -61,7 +61,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.now)
     role_id = db.Column(db.Integer, db.ForeignKey('Roles.id'))
-    author_id = db.relationship('Post', backref='author', lazy='dynamic')
+    post_author_id = db.relationship('Post', backref='post_author', lazy='dynamic')
+    project_author_id = db.relationship('Project', backref='project_author', lazy='dynamic')
 
     @property
     def password(self):
@@ -98,13 +99,39 @@ class Post(db.Model):
     title = db.Column(db.Unicode(64))
     body = db.Column(db.UnicodeText)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
-    slug = db.Column(db.String(80))
+    post_author_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    slug = db.Column(db.String(80), unique=True)
+
+    def __unicode__(self):
+        return self.title
+
+class Project(db.Model):
+    __tablename__ = 'Projects'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Unicode(64))
+    body = db.Column(db.UnicodeText)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    project_author_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    slug = db.Column(db.String(80), unique=True)
 
     def __unicode__(self):
         return self.title
 
 class PostView(ModelView):
+    form_overrides = dict(body=CKEditorField)
+    create_template = 'edit_page.html'
+    edit_template = 'edit_page.html'
+    can_export = True
+    column_default_sort = ('timestamp', True)
+
+    def on_model_change(self, form, model, is_created):
+        if is_created and not model.slug:
+            model.slug = slugify(model.title)
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+class ProjectView(ModelView):
     form_overrides = dict(body=CKEditorField)
     create_template = 'edit_page.html'
     edit_template = 'edit_page.html'
@@ -139,9 +166,11 @@ admin = Admin(app, name='Flasky ADM', template_mode='bootstrap4', index_view=Cus
 admin.add_view(CustomModelView(User, db.session))
 admin.add_view(CustomModelView(Role, db.session))
 admin.add_view(PostView(Post, db.session, name="Post", endpoint="post"))
+admin.add_view(ProjectView(Project, db.session, name="Project", endpoint="project"))
 admin.add_link(MenuLink(name='Home', url='/', category='Live Site'))
 admin.add_link(MenuLink(name='About', url='/about', category='Live Site'))
 admin.add_link(MenuLink(name='Blog', url='/blog', category='Live Site'))
+admin.add_link(MenuLink(name='Projects', url='/projects', category='Live Site'))
 # admin.add_view(rediscli.RedisCli(Redis()))
 
 @app.route('/')
@@ -165,6 +194,20 @@ def post(slug):
     post_edit_url = url_for('post.edit_view', id=post.id)
     if post:
         return render_template("post.html", post=post, post_edit_url=post_edit_url)
+
+@app.route('/projects')
+def projects():
+    page = request.args.get('page', 1, type=int)
+    pagination = Project.query.order_by(Project.timestamp.desc()).paginate(page, per_page=5)
+    projects = pagination.items
+    return render_template('projects.html', projects=projects, pagination=pagination)
+
+@app.route('/projects/<slug>')
+def project(slug):
+    project = Project.query.filter_by(slug=slug).first()
+    project_edit_url = url_for('project.edit_view', id=project.id)
+    if post:
+        return render_template("project.html", project=project, project_edit_url=project_edit_url)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

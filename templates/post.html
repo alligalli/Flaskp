@@ -8,7 +8,7 @@
     {% if current_user.is_authenticated %}
         <p><a href="{{ post_edit_url }}">Edit</a></p>
     {% endif %}
-    <p class="text-center">{{ post.author.username }} - {{ moment(post.timestamp).fromNow() }}</p>
+    <p class="text-center">{{ post.post_author.username }} - {{ moment(post.timestamp).fromNow() }}</p>
     <hr>
     {{ post.body|safe }}
 </div>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}<title>{{ project.title }}</title>{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+    <h1 class="text-center">{{ project.title }}</h1>
+    {% if current_user.is_authenticated %}
+        <p><a href="{{ project_edit_url }}">Edit</a></p>
+    {% endif %}
+    <p class="text-center">{{ project.project_author.username }} - {{ moment(project.timestamp).fromNow() }}</p>
+    <hr>
+    {{ project.body|safe }}
+</div>
+{% endblock %}
