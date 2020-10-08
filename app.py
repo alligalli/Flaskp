@@ -17,6 +17,7 @@ from flask_sslify import SSLify
 from flask_admin import Admin, AdminIndexView
 # from flask_admin.contrib import rediscli
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
 from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
@@ -107,6 +108,8 @@ class PostView(ModelView):
     form_overrides = dict(body=CKEditorField)
     create_template = 'edit_page.html'
     edit_template = 'edit_page.html'
+    can_export = True
+    column_default_sort = ('timestamp', True)
 
     def on_model_change(self, form, model, is_created):
         if is_created and not model.slug:
@@ -135,7 +138,10 @@ class LoginForm(FlaskForm):
 admin = Admin(app, name='Flasky ADM', template_mode='bootstrap4', index_view=CustomAdminIndexView())
 admin.add_view(CustomModelView(User, db.session))
 admin.add_view(CustomModelView(Role, db.session))
-admin.add_view(PostView(Post, db.session))
+admin.add_view(PostView(Post, db.session, name="Post", endpoint="post"))
+admin.add_link(MenuLink(name='Home', url='/', category='Live Site'))
+admin.add_link(MenuLink(name='About', url='/about', category='Live Site'))
+admin.add_link(MenuLink(name='Blog', url='/blog', category='Live Site'))
 # admin.add_view(rediscli.RedisCli(Redis()))
 
 @app.route('/')
@@ -149,15 +155,16 @@ def about():
 @app.route('/blog')
 def blog():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, per_page=3)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, per_page=5)
     posts = pagination.items
     return render_template('blog.html', posts=posts, pagination=pagination)
 
 @app.route('/blog/<slug>')
 def post(slug):
     post = Post.query.filter_by(slug=slug).first()
+    post_edit_url = url_for('post.edit_view', id=post.id)
     if post:
-        return render_template("post.html", post=post)
+        return render_template("post.html", post=post, post_edit_url=post_edit_url)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

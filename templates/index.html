@@ -8,7 +8,6 @@
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id dui rhoncus, vulputate ipsum eu, condimentum ipsum. Proin ultricies turpis vitae dui pulvinar porta. Nulla euismod molestie sagittis. Morbi vel convallis sapien, quis maximus leo. Sed vel neque commodo, facilisis tellus id, tincidunt nulla. Donec id enim vel erat luctus mattis. Morbi velit eros, imperdiet nec mattis sit amet, finibus sit amet sapien. Phasellus malesuada, nunc sit amet lacinia cursus, mauris tellus aliquam mi, eget iaculis est lorem eget lectus. Phasellus ut sem blandit metus pharetra imperdiet id et turpis. Aliquam ornare scelerisque elit eu aliquam. Integer luctus elementum volutpat. Phasellus pulvinar lobortis mi ut sodales. Morbi pellentesque tincidunt enim, at finibus lacus auctor nec. Sed eget ultricies nibh.</p>
     <p>{{ moment(current_time).format('LLL') }}</p>
     <p>{{ moment(current_time).fromNow(refresh=True) }}</p>
-    <a href="{{ url_for('admin.index') }}">Click me to get to Admin!</a>
     {% if current_user.is_authenticated %}
         <p><a href="{{ url_for('logout') }}">Logout</a></p>
     {% else %}

@@ -3,5 +3,5 @@
 {% block tail %}
     {{ super() }}
     {{ ckeditor.load(custom_url=url_for('static', filename='ckeditor/ckeditor.js')) }}
-    {{ ckeditor.config(name='body', custom_config="embed_provider: '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=IFRAMELY_API_KEY'") }}
+    {{ ckeditor.config(name='body', custom_config="embed_provider: '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key={{ IFRAMELY_API_KEY }}'") }}
 {% endblock %}

@@ -33,6 +33,9 @@
                 <div class="navbar-nav">
                     {{ render_nav_item('about', 'About') }}
                     {{ render_nav_item('blog', 'Blog') }}
+                    {% if current_user.is_authenticated %}
+                        {{ render_nav_item('admin.index', 'Admin') }}
+                    {% endif %}
                 </div>
             </div>
         </nav>

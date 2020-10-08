@@ -5,6 +5,9 @@
 {% block content %}
 <div class="container mt-2">
     <h1 class="text-center">{{ post.title }}</h1>
+    {% if current_user.is_authenticated %}
+        <p><a href="{{ post_edit_url }}">Edit</a></p>
+    {% endif %}
     <p class="text-center">{{ post.author.username }} - {{ moment(post.timestamp).fromNow() }}</p>
     <hr>
     {{ post.body|safe }}
