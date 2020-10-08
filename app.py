@@ -33,8 +33,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIF
 app.config['FLASK_ADMIN_SWATCH'] = os.getenv("FLASK_ADMIN_SWATCH")
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = os.getenv("FLASK_ADMIN_FLUID_LAYOUT")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'flasky.sqlite')
+app.config['IFRAMELY_API_KEY'] = os.getenv('IFRAMELY_API_KEY')
 app.config['CKEDITOR_ENABLE_CSRF'] = os.getenv('CKEDITOR_ENABLE_CSRF')
-app.config['CKEDITOR_PKG_TYPE'] = os.getenv('CKEDITOR_PKG_TYPE')
 app.config['CKEDITOR_FILE_UPLOADER'] = os.getenv("CKEDITOR_FILE_UPLOADER")
 app.config['UPLOADED_PATH'] = os.path.join(basedir, 'uploads')
 
