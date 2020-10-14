@@ -40,7 +40,7 @@ def create_app(config_name):
 
     from .models import User, Role, Post, Project
     from .main.views import CustomAdminIndexView, CustomModelView, PostView, ProjectView
-    admin = Admin(app, name='Flasky ADM', template_mode='bootstrap4', index_view=CustomAdminIndexView())
+    admin = Admin(app, name='Flaskp ADM', template_mode='bootstrap4', index_view=CustomAdminIndexView())
     admin.add_view(CustomModelView(User, db.session))
     admin.add_view(CustomModelView(Role, db.session))
     admin.add_view(PostView(Post, db.session, name="Post", endpoint="post"))
