@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% from 'bootstrap/pagination.html' import render_pager, render_pagination %}
 
-{% block title %}<title>Flasky - Blog</title>{% endblock %}
+{% block title %}<title>Flasky - Projects</title>{% endblock %}
 
 {% block content %}
 <div class="container mt-2">
-    <h1 class="text-center">Hello, Blog!</h1>
+    <h1 class="text-center">Hello, Projects!</h1>
 </div>
 
 <div class="container mt-2">
-    {% for post in posts %}
+    {% for project in projects %}
     <ul class="list-unstyled">
         <li class="media my-2">
             {% from 'bootstrap/utils.html' import render_icon %}
-            <div class="mr-3">{{ render_icon('terminal', size='50px') }}</div>
+            <div class="mr-3">{{ render_icon('flag', size='50px') }}</div>
             <div class="media-body">
-                <h1 class="mt-0 mb-1"><a href="{{ url_for('blog')}}/{{ post.slug }}">{{ post.title }}</a></h1>
-                {{ post.post_author.username }} - {{ moment(post.timestamp).fromNow() }}
+                <h1 class="mt-0 mb-1"><a href="{{ url_for('main.projects')}}/{{ project.slug }}">{{ project.title }}</a></h1>
+                {{ project.project_author.username }} - {{ moment(project.timestamp).fromNow() }}
             </div>
         </li>
     </ul>
