@@ -1,0 +1,14 @@
+version: '3'
+services:
+  flaskp:
+    build: .
+    ports:
+      - "8000:5000"
+    env_file: .env
+    restart: unless-stopped
+    links:
+      - mysql:dbserver
+  mysql:
+    image: "mysql/mysql-server:5.7"
+    env_file: .env-mysql
+    restart: unless-stopped

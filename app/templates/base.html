@@ -21,19 +21,19 @@
         {% block navbar %}
         {% from 'bootstrap/nav.html' import render_nav_item %}
         <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
                 {% from 'bootstrap/utils.html' import render_icon %}
                 <div class="d-inline-block align-top">{{ render_icon('terminal', size='30') }}</div>
-                Flasky
+                Flaskp
             </a>
             <button class="navbar-toggler navbar-light" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    {{ render_nav_item('about', 'About') }}
-                    {{ render_nav_item('blog', 'Blog') }}
-                    {{ render_nav_item('projects', 'Projects') }}
+                    {{ render_nav_item('main.about', 'About') }}
+                    {{ render_nav_item('main.blog', 'Blog') }}
+                    {{ render_nav_item('main.projects', 'Projects') }}
                     {% if current_user.is_authenticated %}
                         {{ render_nav_item('admin.index', 'Admin') }}
                     {% endif %}
@@ -51,7 +51,7 @@
 
         <footer class="py-4">
             <div class="container text-center">
-               <small>Copyright &copy; {{ moment().format('YYYY') }} Flasky</small>
+               <small>Copyright &copy; {{ moment().format('YYYY') }} Flaskp</small>
             </div>
         </footer>
 
