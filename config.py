@@ -19,7 +19,7 @@ class Config:
         pass
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    FLASK_DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'flaskp-dev.sqlite')
 
@@ -50,6 +50,5 @@ config = {
     'testing': TestingConfig,
     'production': ProductionConfig,
     'docker': DockerConfig,
-
     'default': DevelopmentConfig,
 }
