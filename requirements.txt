@@ -4,7 +4,7 @@ click==7.1.2
 dnspython==2.0.0
 email-validator==1.1.1
 Flask==1.1.2
-Flask-Admin @ git+https://github.com/flask-admin/flask-admin.git@58bf83185d3ce16490e3aa9ccd1240d7ae169802
+Flask-Admin @ git+https://github.com/flask-admin/flask-admin@e764f6f0be3facbefb2b4d30b5c3f2f2c630d530
 Flask-CKEditor==0.4.4.1
 Flask-Login==0.5.0
 Flask-Migrate==2.5.3
@@ -12,11 +12,13 @@ Flask-Moment==0.10.0
 Flask-SQLAlchemy==2.4.4
 Flask-SSLify==0.1.5
 Flask-WTF==0.14.3
+gunicorn==20.0.4
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.2
 Mako==1.1.3
 MarkupSafe==1.1.1
+PyMySQL==0.10.1
 python-dateutil==2.8.1
 python-dotenv==0.14.0
 python-editor==1.0.4
