@@ -1,2 +1,2 @@
-# flask-portfolio
-Personal portfolio Flask App
+# Flaskp
+Personal blog and portfolio Flask App
