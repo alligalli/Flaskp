@@ -26,4 +26,5 @@ def test():
 @app.cli.command("deploy")
 def deploy():
     """Run deployment tasks."""
+    db.create_all()
     upgrade()

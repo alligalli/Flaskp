@@ -4,7 +4,7 @@ click==7.1.2
 dnspython==2.0.0
 email-validator==1.1.1
 Flask==1.1.2
-Flask-Admin @ git+https://github.com/flask-admin/flask-admin@e764f6f0be3facbefb2b4d30b5c3f2f2c630d530
+Flask-Admin==1.5.7
 Flask-CKEditor==0.4.4.1
 Flask-Login==0.5.0
 Flask-Migrate==2.5.3
