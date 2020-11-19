@@ -9,7 +9,8 @@
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
-            <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Ubuntu+Mono&display=swap" rel="stylesheet" type="text/css"> 
+            <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Ubuntu+Mono&display=swap" rel="stylesheet" type="text/css">
+            <link rel="stylesheet" href="{{ url_for('static', filename= 'node_modules/wow.js/css/libs/animate.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename= 'css/styles.css') }}">
         {% endblock %}
 
@@ -60,6 +61,10 @@
             {{ bootstrap.load_js() }}
             {{ moment.include_moment() }}
             {{ moment.locale('en') }}
+            <script src="{{ url_for('static', filename= 'node_modules/wow.js/dist/wow.js') }}"></script>
+            <script>
+            new WOW().init();
+            </script>
         {% endblock %}
     </body>
 </html>
