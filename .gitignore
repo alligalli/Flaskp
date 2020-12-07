@@ -134,3 +134,6 @@ dmypy.json
 
 # SQLite
 *.sqlite
+
+# Node
+node_modules/
