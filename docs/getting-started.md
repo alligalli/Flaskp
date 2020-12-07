@@ -12,7 +12,7 @@ To work properly first you have to provide the correct environment variables, ad
 SECRET_KEY="verylongandsecretkey"
 FLASK_APP=flaskp.py
 FLASK_ENV=development
-DATABASE_URL=mysql+pymysql://flaskp_db:flask_db_password@dbserver/flaskp_db
+DATABASE_URL=mysql+pymysql://flaskp_db:flask_db_password@dbserver/flaskp_db?charset=utf8mb4
 ```
 
 `.env-mysql`
